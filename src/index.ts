@@ -17,10 +17,10 @@ DiscordClient.on("message", async (message) => {
         try {
             const embed = new MessageEmbed();
 
-            embed.setTitle("🏓Status Check")
+            embed.setTitle("Status Check")
                 .setColor(0x00ff00)
                 .addField(`**Message Latency**`, `${Date.now() - message.createdTimestamp}ms`)
-                .addField("**Uptime**", moment(Date.now() - StartTime).format("h[H] mm[M] ss[S]"))
+                .addField("**Uptime**", moment(DiscordClient.uptime).subtract(1, "h").format("h[H] m[M] s[S]"))
                 .addField("**Guild Count**", DiscordClient.guilds.cache.size);
 
             let memberCount = 0;
@@ -30,7 +30,7 @@ DiscordClient.on("message", async (message) => {
 
             embed.addField("**Member Count**", memberCount);
 
-            await message.channel.send(embed)
+            await message.channel.send(embed);
         } catch (e) {
             await message.channel.send("Error Occurred: "+ e)
             throw e;
