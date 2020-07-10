@@ -13,21 +13,29 @@ DiscordClient.on("message", async (message) => {
 
     const [commandname, ...args] = message.content.substring(Config.default_prefix.length).split(" ");
 
-    if (commandname == "ping") {
-        const embed = new MessageEmbed().setTitle("🏓 Pong!")
-            .setColor(0x00ff00)
-            .addField(`**Message Latency**`, `${Date.now() - message.createdTimestamp}ms`)
-            .addField("**Uptime**", moment(Date.now() - StartTime).format("h[H] mm[M] ss[S]"))
-            .addField("**Guild Count**", DiscordClient.guilds.cache.size);
+    if (commandname == "status") {
+        try {
+            const embed = new MessageEmbed();
 
-        let memberCount = 0;
-        DiscordClient.guilds.cache.forEach((guild) => {
-            memberCount += guild.memberCount;
-        })
+            embed.setTitle("🏓Status Check")
+                .setColor(0x00ff00)
+                .addField(`**Message Latency**`, `${Date.now() - message.createdTimestamp}ms`)
+                .addField("**Uptime**", moment(Date.now() - StartTime).format("h[H] mm[M] ss[S]"))
+                .addField("**Guild Count**", DiscordClient.guilds.cache.size);
 
-        embed.addField("**Member Count**", memberCount);
+            let memberCount = 0;
+            DiscordClient.guilds.cache.forEach((guild) => {
+                memberCount += guild.memberCount;
+            })
 
-        await message.channel.send(embed)
+            embed.addField("**Member Count**", memberCount);
+
+            await message.channel.send(embed)
+        } catch (e) {
+            await message.channel.send("Error Occurred: "+ e)
+            throw e;
+        }
+
     }
     
 })
