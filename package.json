@@ -1,0 +1,26 @@
+{
+  "name": "Stratos",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Abyss",
+  "license": "MIT",
+  "scripts": {
+    "start": "tsc && node build/index.js",
+    "dev": "nodemon"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4",
+    "ts-node": "^8.10.2"
+  },
+  "dependencies": {
+    "@discordjs/opus": "^0.3.2",
+    "@types/node": "^14.0.20",
+    "bufferutil": "^4.0.1",
+    "discord.js": "^12.2.0",
+    "erlpack": "discordapp/erlpack",
+    "moment": "^2.27.0",
+    "typescript": "^3.9.6",
+    "utf-8-validate": "^5.0.2",
+    "zlib-sync": "^0.1.7"
+  }
+}
