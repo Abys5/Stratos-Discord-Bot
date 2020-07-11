@@ -1,6 +1,6 @@
-
+import {Message} from "discord.js";
 
 export default interface ICommand {
     desc: string;
-    execute: (Array<string>): boolean;
+    execute: (args: string[], message: Message) => boolean;
 }
