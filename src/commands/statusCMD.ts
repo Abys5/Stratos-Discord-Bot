@@ -3,6 +3,7 @@ import {commandMap} from "../handlers/commandHandler";
 import {MessageEmbed} from "discord.js";
 import moment from "moment";
 import DiscordClient from "../index";
+import {activities} from "../handlers/activityHandler";
 
 
 const commandInfo: ICommand = {desc: "Shows the Bots Status", execute: (args, message) => {
@@ -19,6 +20,10 @@ const commandInfo: ICommand = {desc: "Shows the Bots Status", execute: (args, me
                 memberCount += guild.memberCount;
             });
             embed.addField("**Member Count**", memberCount);
+
+            embed.addField("**Command Count**", commandMap.size);
+
+            embed.addField("**Activity Status Count**", activities.length);
 
             message.channel.send(embed);
         } catch (e) {

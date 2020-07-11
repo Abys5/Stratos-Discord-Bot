@@ -8,9 +8,10 @@ export interface Activity {
     type: "WATCHING" | "PLAYING"
 }
 
+const activities: {(): Activity}[] = [];
+
 const activityHandler = () => {
     let item = 0;
-    const activities: {(): Activity}[] = [];
 
     readdirSync(__dirname+"/../activities").forEach(async (filename) => {
         const func = await import(`../activities/${filename.replace(".ts", "")}`);
@@ -34,3 +35,4 @@ const activityHandler = () => {
 }
 
 export default activityHandler;
+export {activities}
