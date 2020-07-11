@@ -6,7 +6,7 @@ import DiscordClient from "../index";
 import {activities} from "../handlers/activityHandler";
 
 
-const commandInfo: ICommand = {desc: "Shows the Bots Status", execute: (args, message) => {
+const commandInfo: ICommand = {desc: "Shows the Bots Status", guildOnly: false, execute: (args, message) => {
         try {
             const embed = new MessageEmbed();
             embed.setTitle("❗ Status Check ❗")

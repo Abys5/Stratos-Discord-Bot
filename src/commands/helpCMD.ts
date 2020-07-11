@@ -2,7 +2,7 @@ import ICommand from "../interface/ICommand";
 import {commandMap} from "../handlers/commandHandler";
 import {MessageEmbed} from "discord.js";
 
-const commandInfo: ICommand = {desc: "Shows all commands", execute: (args, message) => {
+const commandInfo: ICommand = {desc: "Shows all commands", guildOnly: false, execute: (args, message) => {
         const embed = new MessageEmbed();
 
         embed.setTitle("Help").setColor(0x00ff00);
