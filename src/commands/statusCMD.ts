@@ -8,11 +8,12 @@ import {activities} from "../handlers/activityHandler";
 
 const commandInfo: ICommand = {desc: "Shows the Bots Status", guildOnly: false, execute: (args, message) => {
         try {
+            message.delete({reason: "Stratos Auto Delete"})
             const embed = new MessageEmbed();
             embed.setTitle("❗ Status Check ❗")
                 .setColor(0x00ff00)
                 .addField(`**Message Latency**`, `${Date.now() - message.createdTimestamp}ms`)
-                .addField("**Uptime**", moment(DiscordClient.uptime).subtract(1, "h").format("h[H] m[M] s[S]"))
+                .addField("**Uptime**", moment(DiscordClient.uptime).subtract(0, "h").format("h[H] m[M] s[S]"))
                 .addField("**Guild Count**", DiscordClient.guilds.cache.size);
 
             let memberCount = 0;
