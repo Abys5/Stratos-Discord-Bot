@@ -1,14 +1,11 @@
-import {Client, Guild, MessageEmbed} from "discord.js";
+import {Client} from "discord.js";
 
 import Config from './config.json';
-import moment from "moment";
 import activityHandler from "./handlers/activityHandler";
 import {commandHandler} from "./handlers/commandHandler";
 import {readdirSync} from "fs";
 
 const DiscordClient = new Client();
-
-const StartTime = Date.now();
 
 DiscordClient.on("message", async (message) => {
     if (message.author.bot) return;
