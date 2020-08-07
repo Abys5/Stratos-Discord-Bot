@@ -1,12 +1,11 @@
 import {Message, MessageEmbed} from "discord.js";
 
-export default (e: any, message: Message) => {
+export default (e: string, desc: string, message: Message) => {
     const embed = new MessageEmbed();
     embed.setColor(0xff0000)
         .setTitle("Error has Occurred")
-        .setDescription("Send this to the Dev if it continues!")
+        .setDescription(desc)
         .addField("Error", e)
-        .addField("Invite", "To be Added")
         .setFooter("Guild: "+message.guild)
         .setTimestamp(Date.now());
 
