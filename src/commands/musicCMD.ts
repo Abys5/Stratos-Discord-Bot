@@ -7,24 +7,37 @@ import {
     GuildMemberResolvable,
     Message,
     MessageEmbed,
-    StreamDispatcher,
+    StreamDispatcher, TextChannel,
     VoiceConnection
 } from "discord.js";
 import ytdl from "ytdl-core";
+const YTAPI = require("discord-youtube-api");
 import errorMSG from "../message/errorMSG";
+import nowPlayingMSG from "../message/nowPlayingMSG";
+import addQueueMSG from "../message/addQueueMSG";
 
-let servers: { [key: string]: { queue: string[], dispatcher: StreamDispatcher | null }} = {};
+const Youtube = new YTAPI("AIzaSyDbPry3fxdwbIJiL3Zs1r0Pdaj5XgBMgp4");
 
-function playYT(connection: VoiceConnection, link: string, guild: Guild, channel: Channel) {
+interface queueItem {
+    name: string;
+    url: string;
+}
+
+let servers: { [key: string]: { queue: queueItem[], dispatcher: StreamDispatcher | null }} = {};
+
+function playYT(connection: VoiceConnection, guild: Guild, channel: Channel) {
     var server = servers[guild.id];
 
-    console.log(`[MUSIC] Playing ${server.queue[0]}`);
+    console.log(`[MUSIC] Playing ${server.queue[0].name}`);
 
-    server.dispatcher = connection.play((ytdl(server.queue[0], { filter: "audioonly"}))).on("finish", () => {
-        console.log(`[MUSIC] Song ${server.queue[0]} Finishing`);
+    let song = server.queue[0];
+    nowPlayingMSG(song.name, song.url, <TextChannel>channel);
+
+    server.dispatcher = connection.play((ytdl(server.queue[0].url, { filter: "audioonly"}))).on("finish", () => {
+        console.log(`[MUSIC] Song ${server.queue[0].name} Finishing @ ${guild.name} | ${guild.id}`);
         server.queue.shift();
-        if (server.queue[0]) {
-            playYT(connection, link, guild, channel);
+        if (song) {
+            playYT(connection, guild, channel);
         } else {
             connection.disconnect();
         }
@@ -32,7 +45,25 @@ function playYT(connection: VoiceConnection, link: string, guild: Guild, channel
 
 }
 
-const musicCMD: ICommand = {desc: "Plays Music From YT", guildOnly: true, execute: (args, message) => {
+async function addQueue(param: string, guildID: string, channel: TextChannel) {
+    var server = servers[guildID];
+
+
+
+    if (RegExp("^((?:https?:)?\\/\\/)?((?:www|m)\\.)?((?:youtube\\.com|youtu.be))(\\/(?:[\\w\\-]+\\?v=|embed\\/|v\\/)?)([\\w\\-]+)(\\S+)?$").test(param)) {
+        let vid = await Youtube.getVideo(param);
+        server.queue.push({url: vid.url, name: vid.title});
+    } else {
+        let vid = await Youtube.searchVideos(param);
+        server.queue.push({url: vid.url, name: vid.title});
+    }
+
+    let song = server.queue[server.queue.length-1];
+    console.log(`[MUSIC] Added ${song.name} to queue for ${guildID}`);
+    addQueueMSG(song.name, song.url, channel);
+}
+
+const musicCMD: ICommand = {desc: `Plays Music From YT \n - play <song|url> \n - stop \n - leave \n - queue`, guildOnly: true, execute: (args, message) => {
         try {
             message.delete({reason: "Stratos Auto Delete"})
 
@@ -67,6 +98,11 @@ const musicCMD: ICommand = {desc: "Plays Music From YT", guildOnly: true, execut
                         return true;
                     }
 
+                    if (!(message.channel instanceof TextChannel)) {
+                        errorMSG("You somehow sent a text message in a voice channel", "", message);
+                        return true;
+                    }
+
                     if (!servers[message.guild.id]) {
                         servers[message.guild.id] = {
                             queue: [],
@@ -74,27 +110,38 @@ const musicCMD: ICommand = {desc: "Plays Music From YT", guildOnly: true, execut
                         }
                     }
 
-                    var server = servers[message.guild.id];
 
-                    console.log(`[MUSIC] Adding ${args[1]} to queue for ${message.guild.id}`);
-                    server.queue.push(args[1]);
+                    addQueue(args.splice(1).join(" "), message.guild.id, message.channel).then(() => {
+                        if (message.guild == null) {
+                            errorMSG("This is not in a Guild", "", message);
+                            return true;
+                        }
+
+                        if (!message.member?.voice.channel) {
+                            errorMSG("Unable to play as user is not in a voice channel", "", message);
+                            return true;
+                        }
+
+                        if (!message.guild.voice?.connection) {
+                            console.log("[MUSIC] Attempting to Join");
+                            message.member.voice.channel.join().then(conn => {
+                                console.log(`[MUSIC] Joined ${message.member?.voice.channel?.name} on ${message.guild?.name}`);
+                                if (message.guild) {
+                                    playYT(conn, message.guild, message.channel);
+                                }
+                            });
+                        }
+                    });
 
 
-                    if (!message.guild.voice?.connection) {
-                        console.log("[MUSIC] Attempting to Join");
-                        message.member.voice.channel.join().then(conn => {
-                            console.log(`[MUSIC] Joined ${message.member?.voice.channel?.name} on ${message.guild?.name}`);
-                            if (message.guild) {
-                                playYT(conn, args[1], message.guild, message.channel);
-                            }
-                        });
-                    }
+
 
                     return true;
 
 
                 case "skip":
                     var server = servers[message.guild.id];
+                    server.queue.shift();
                     if (server.dispatcher) server.dispatcher.end();
                     return true;
 
@@ -106,6 +153,12 @@ const musicCMD: ICommand = {desc: "Plays Music From YT", guildOnly: true, execut
                             server.queue.splice(i, 1)
                         }
                         if (server.dispatcher) server.dispatcher.end();
+                    }
+                    return true;
+
+                case "leave":
+                    if (message.guild.voice) {
+                        message.guild.me?.voice.channel?.leave();
                     }
                     return true;
 
@@ -121,7 +174,7 @@ const musicCMD: ICommand = {desc: "Plays Music From YT", guildOnly: true, execut
                         if (!server.queue[i])
                             continue;
 
-                        embed.addField(i, server.queue[i]);
+                        embed.addField(i+1, server.queue[i].name);
                     }
 
                     message.channel.send(embed);

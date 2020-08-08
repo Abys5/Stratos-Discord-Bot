@@ -16,6 +16,7 @@
     "@discordjs/opus": "^0.3.2",
     "@types/node": "^14.0.20",
     "bufferutil": "^4.0.1",
+    "discord-youtube-api": "^0.1.0",
     "discord.js": "^12.2.0",
     "erlpack": "discordapp/erlpack",
     "typescript": "^3.9.6",
