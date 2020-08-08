@@ -15,8 +15,9 @@ const YTAPI = require("discord-youtube-api");
 import errorMSG from "../message/errorMSG";
 import nowPlayingMSG from "../message/nowPlayingMSG";
 import addQueueMSG from "../message/addQueueMSG";
+import config from '../config.json';
 
-const Youtube = new YTAPI("AIzaSyDbPry3fxdwbIJiL3Zs1r0Pdaj5XgBMgp4");
+const Youtube = new YTAPI(config.ytDataV3APIKey);
 
 interface queueItem {
     name: string;
