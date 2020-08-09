@@ -64,7 +64,7 @@ async function addQueue(param: string, guildID: string, channel: TextChannel) {
     addQueueMSG(song.name, song.url, channel);
 }
 
-const musicCMD: ICommand = {desc: `Plays Music From YT \n - play <song|url> \n - stop \n - leave \n - queue`, guildOnly: true, execute: (args, message) => {
+const musicCMD: ICommand = {desc: "Plays Music From YT \n **play <song|url>** - Play Song on YT \n **stop** - Stops all Music and leaves \n **queue** - View the Queue", guildOnly: true, execute: (args, message) => {
         try {
             message.delete({reason: "Stratos Auto Delete"})
 
@@ -154,12 +154,6 @@ const musicCMD: ICommand = {desc: `Plays Music From YT \n - play <song|url> \n -
                             server.queue.splice(i, 1)
                         }
                         if (server.dispatcher) server.dispatcher.end();
-                    }
-                    return true;
-
-                case "leave":
-                    if (message.guild.voice) {
-                        message.guild.me?.voice.channel?.leave();
                     }
                     return true;
 
