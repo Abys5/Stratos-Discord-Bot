@@ -1,13 +1,16 @@
-import ICommand from "../interface/ICommand";
 import {commandMap} from "../handlers/commandHandler";
-import {MessageEmbed} from "discord.js";
+import {Message, MessageEmbed} from "discord.js";
+import Command from "../classes/command";
 
-const commandInfo: ICommand = {desc: "Shows all commands", guildOnly: false, execute: (args, message) => {
+class helpCMD extends Command {
+    execute(message: Message, args: string[]) {
+        super.execute(message, args);
+        message.delete({reason: "Stratos Auto Delete"})
         const embed = new MessageEmbed();
 
         embed.setTitle("Help").setColor(0x00ff00);
         commandMap.forEach((command, commandname) => {
-            embed.addField(commandname, command.desc);
+            embed.addField(command.commandName, command.desc);
         })
         message.author.send(embed);
         if (message.guild) {
@@ -17,6 +20,14 @@ const commandInfo: ICommand = {desc: "Shows all commands", guildOnly: false, exe
             })
         }
         return true;
-    }}
+    }
+}
 
-commandMap.set("help", commandInfo);
+commandMap.push(new helpCMD("help",
+    false,
+    "Help Command",
+    [
+    ]));
+
+
+//commandMap.set("help", commandInfo);

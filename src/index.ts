@@ -19,7 +19,7 @@ DiscordClient.on("message", async (message) => {
 DiscordClient.on("ready", () => {
     console.log("[ACTION: READY] Discord Bot is Ready");
     activityHandler();
-    readdirSync(__dirname+"/commands").forEach(async (filename) => {
+    readdirSync(__dirname+"/commands").filter((item) => item.endsWith(".ts")).forEach(async (filename) => {
         await import(`./commands/${filename.replace(".ts", "")}`);
         console.log(`[ACTION: CMD Loaded] ${filename}`);
     });

@@ -1,4 +1,3 @@
-import ICommand from "../interface/ICommand";
 import {commandMap} from "../handlers/commandHandler";
 import {
     Channel,
@@ -16,6 +15,8 @@ import errorMSG from "../message/errorMSG";
 import nowPlayingMSG from "../message/nowPlayingMSG";
 import addQueueMSG from "../message/addQueueMSG";
 import config from '../config.json';
+import Command from "../classes/command";
+import play from "./music/play";
 
 const Youtube = new YTAPI(config.ytDataV3APIKey);
 
@@ -64,14 +65,28 @@ async function addQueue(param: string, guildID: string, channel: TextChannel) {
     addQueueMSG(song.name, song.url, channel);
 }
 
+class MusicCMD extends Command {
+    execute(message: Message, args: string[]): boolean {
+        if(super.execute(message, args)) {
+            return true;
+        };
+        message.delete({reason: "Stratos Auto Delete"})
+        message.channel.send("INDEX");
+        return true;
+    }
+}
+
+commandMap.push(new MusicCMD("music",
+    true,
+    "Plays Music From YT",
+    [
+        play,
+    ]));
+
+/*
 const musicCMD: ICommand = {desc: "Plays Music From YT \n **play <song|url>** - Play Song on YT \n **stop** - Stops all Music and leaves \n **queue** - View the Queue", guildOnly: true, execute: (args, message) => {
         try {
-            message.delete({reason: "Stratos Auto Delete"})
 
-            if (message.guild == null) {
-                errorMSG("This is not in a Guild", "", message);
-                return true;
-            }
 
 
             switch (args[0]) {
@@ -188,5 +203,5 @@ const musicCMD: ICommand = {desc: "Plays Music From YT \n **play <song|url>** - 
         }
     return true;
 }}
-
-commandMap.set("music", musicCMD);
+*/
+//commandMap.set("music", musicCMD);
