@@ -14,6 +14,7 @@ export default (e: string, desc: string, message: Message) => {
             console.log(`[ERROR] ${e} @ ${message.guild.id}`)
         } else {
             console.log(`[ERROR] ${e} @ User ${message.author.username+"#"+message.author.discriminator}`)
-        }
+        };
+        r.delete()
     });
 }

@@ -19,7 +19,6 @@ class Command {
         const subcommand = this.subCommandList.filter((item) => item.commandName === args[0])[0];
         if (subcommand != null) {
             const modArgs = args.splice(1);
-            console.log(modArgs);
             subcommand.execute(message, modArgs);
             return true;
         }

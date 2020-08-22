@@ -13,7 +13,7 @@ const activities: {(): Activity}[] = [];
 const activityHandler = () => {
     let item = 0;
 
-    readdirSync(__dirname+"/../activities").forEach(async (filename) => {
+    readdirSync(__dirname+"/../activities").filter(item => item.endsWith(".ts")).forEach(async (filename) => {
         const func = await import(`../activities/${filename.replace(".ts", "")}`);
         console.log(`[ACTION: ACT Loaded] ${filename}`);
         activities.push(func.default);
@@ -31,7 +31,7 @@ const activityHandler = () => {
         }
 
         console.log(`[ACTION: UPDATE_ACT] Updated to ${item}`)
-    }, 30*1000);
+    }, 45*1000);
 }
 
 export default activityHandler;
