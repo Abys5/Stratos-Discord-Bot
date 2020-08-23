@@ -1,7 +1,7 @@
 import Command from "../../classes/command";
 import {GuildMemberResolvable, Message, TextChannel} from "discord.js";
 import errorMSG from "../../message/errorMSG";
-import {addQueue, playYT, serverQueues} from "../../handlers/musicHandler";
+import {addQueue, playYT} from "../../handlers/musicHandler";
 
 class PlayCMD extends Command {
     execute(message: Message, args: string[]) {
@@ -37,7 +37,7 @@ class PlayCMD extends Command {
             }
 
 
-            addQueue(args.splice(1).join(" "), message.guild.id, message.channel).then(() => {
+            addQueue(args.splice(0).join(" "), message.guild.id, message.channel).then(() => {
                 if (message.guild == null) {
                     errorMSG("This is not in a Guild", "", message);
                     return true;
@@ -65,7 +65,7 @@ class PlayCMD extends Command {
     }
 }
 
-export default new PlayCMD("play",
+export default new PlayCMD("play", //s!music play
     true,
     "**play <song|url>** - Play Song on YT",
     []);

@@ -15,6 +15,6 @@ export default (e: string, desc: string, message: Message) => {
         } else {
             console.log(`[ERROR] ${e} @ User ${message.author.username+"#"+message.author.discriminator}`)
         };
-        r.delete()
+        r.delete({timeout: 3000, reason: "Stratos Auto Delete"});
     });
 }

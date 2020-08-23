@@ -1,25 +1,13 @@
 import {commandMap} from "../handlers/commandHandler";
 import {
-    Channel,
-    Guild,
-    GuildMember,
-    GuildMemberResolvable,
-    Message,
-    MessageEmbed,
-    StreamDispatcher, TextChannel,
-    VoiceConnection
+    Message, MessageEmbed,
 } from "discord.js";
-import ytdl from "ytdl-core";
-import errorMSG from "../message/errorMSG";
-import nowPlayingMSG from "../message/nowPlayingMSG";
-import addQueueMSG from "../message/addQueueMSG";
-import config from '../config.json';
 import Command from "../classes/command";
-import play from "./music/musicPlay";
 import musicPlay from "./music/musicPlay";
 import musicSkip from "./music/musicSkip";
 import musicQueue from "./music/musicQueue";
 import musicStop from "./music/musicStop";
+import musicNow from "./music/musicNow";
 
 
 
@@ -29,17 +17,28 @@ class MusicCMD extends Command {
             return true;
         };
         message.delete({reason: "Stratos Auto Delete"})
-        message.channel.send("INDEX");
+
+        const embed = new MessageEmbed();
+
+        embed.setTitle("Music Help").setColor(0x00ff00);
+        this.subCommandList.forEach(command => {
+            embed.addField("\u200B", command.desc);
+        });
+
+        message.channel.send(embed).then(r => {
+            r.delete({timeout: 5000, reason: "Stratos Auto Delete"});
+        });
         return true;
     }
 }
 
-commandMap.push(new MusicCMD("music",
+commandMap.push(new MusicCMD("music", //s!music
     true,
     "Plays Music From YT",
     [
         musicPlay,
         musicSkip,
         musicQueue,
-        musicStop
+        musicStop,
+        musicNow
     ]));

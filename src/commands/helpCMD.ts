@@ -10,7 +10,9 @@ class helpCMD extends Command {
 
         embed.setTitle("Help").setColor(0x00ff00);
         commandMap.forEach((command, commandname) => {
-            embed.addField(command.commandName, command.desc);
+            if (!command.hidden) {
+                embed.addField(command.commandName, command.desc);
+            }
         })
         message.author.send(embed);
         if (message.guild) {

@@ -1,6 +1,4 @@
 import DiscordClient from "../index";
-import guildActivity from "../activities/guildActivity";
-import memberActivity from "../activities/memberActivity";
 import {readdirSync} from "fs";
 
 export interface Activity {

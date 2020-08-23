@@ -1,5 +1,4 @@
 import {Message} from "discord.js";
-import errorMSG from "../message/errorMSG";
 
 class Command {
 
@@ -7,12 +6,14 @@ class Command {
     desc: string;
     subCommandList: Command[];
     guildOnly: boolean;
+    hidden: boolean;
 
-    constructor(name: string, guildOnly: boolean, desc: string, subcmds: Command[]) {
+    constructor(name: string, guildOnly: boolean, desc: string, subcmds: Command[], hidden: boolean = false) {
         this.commandName = name
         this.subCommandList = subcmds;
         this.guildOnly = guildOnly;
         this.desc = desc;
+        this.hidden = hidden;
     }
 
     execute(message: Message, args: string[]): boolean {
