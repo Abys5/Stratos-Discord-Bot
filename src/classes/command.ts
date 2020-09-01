@@ -4,15 +4,17 @@ class Command {
 
     commandName: string;
     desc: string;
+    permissionNode: Permissions;
     subCommandList: Command[];
     guildOnly: boolean;
     hidden: boolean;
 
-    constructor(name: string, guildOnly: boolean, desc: string, subcmds: Command[], hidden: boolean = false) {
+    constructor(name: string, guildOnly: boolean, desc: string, permissionNode: Permissions, subcmds: Command[], hidden: boolean = false) {
         this.commandName = name
         this.subCommandList = subcmds;
         this.guildOnly = guildOnly;
         this.desc = desc;
+        this.permissionNode = permissionNode;
         this.hidden = hidden;
     }
 

@@ -68,4 +68,5 @@ class PlayCMD extends Command {
 export default new PlayCMD("play", //s!music play
     true,
     "**play <song|url>** - Play Song on YT",
+    Permissions["music.play"],
     []);

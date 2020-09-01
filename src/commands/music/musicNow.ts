@@ -29,4 +29,5 @@ class NowCMD extends Command {
 export default new NowCMD("now",
     true,
     "**now** - Get Current Song Playing",
+    Permissions["music.now"],
     []);

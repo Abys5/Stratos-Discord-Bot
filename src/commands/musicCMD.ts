@@ -8,6 +8,7 @@ import musicSkip from "./music/musicSkip";
 import musicQueue from "./music/musicQueue";
 import musicStop from "./music/musicStop";
 import musicNow from "./music/musicNow";
+import PermissionsStratos from "../permission/permissionENUM";
 
 
 
@@ -35,6 +36,7 @@ class MusicCMD extends Command {
 commandMap.push(new MusicCMD("music", //s!music
     true,
     "Plays Music From YT",
+    PermissionsStratos.music,
     [
         musicPlay,
         musicSkip,

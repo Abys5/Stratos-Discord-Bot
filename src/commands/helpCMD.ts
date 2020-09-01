@@ -1,6 +1,7 @@
 import {commandMap} from "../handlers/commandHandler";
 import {Message, MessageEmbed} from "discord.js";
 import Command from "../classes/command";
+import Permissions from "../permission/permissionENUM";
 
 class helpCMD extends Command {
     execute(message: Message, args: string[]) {
@@ -28,6 +29,7 @@ class helpCMD extends Command {
 commandMap.push(new helpCMD("help",
     false,
     "Help Command",
+    Permissions.help,
     [
     ]));
 
